@@ -5,10 +5,10 @@ import pyqtgraph as pg
 
 # import depending on windows or linux
 if os.name == "nt":
-    from PM100_Windows import PM100D
+    from windows.PM100_Windows import PM100D
 else:
-    from PM100_Linux import PM100D
-from usbtmc import USBTMC
+    from linux.PM100_Linux import PM100D
+from linux.usbtmc import USBTMC
 
 from PyQt6.QtWidgets import (
     QMainWindow,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from VISA_wrapper_metaclass import (Group, IndexedGroup, InstrumentMetaclass,
+from linux.VISA_wrapper_metaclass import (Group, IndexedGroup, InstrumentMetaclass,
 Argument, GenericCommandClass, GenericGetCommandClass, GenericSetCommandClass,
 GenericGetSetCommandClass, InstrumentCommand)
 
