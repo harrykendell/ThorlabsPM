@@ -115,7 +115,7 @@ class PowerMeterPlot(QWidget):
         stride = len(self.timeData) // 1000 + 1
         stride2 = int(numvals // 1000 + 1)
         self.maincurve.setData(self.timeData[i:j:stride2], self.powerData[i:j:stride2])
-        self.maxline.setValue(max(self.powerData))
+        self.maxline.setValue(max(self.powerData[i:j]))
         self.timecurve.setData(self.timeData[::stride], self.powerData[::stride])
         # automatically swap between uW and mW
         self.current_power.setText(
