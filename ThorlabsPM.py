@@ -102,20 +102,21 @@ class PowerMeterPlot(QWidget):
             self.powerData.append(pow)
 
         # given minX and maxX, crop down to only the relevant data
-        i=0
-        j=len(self.timeData)
+        i = 0
+        j = len(self.timeData)
         while self.timeData[i] < minX:
-            i+=1
-        if j>1:
-            while self.timeData[j-1] > maxX:
-                j-=1
+            i += 1
+        if j > 1:
+            while self.timeData[j - 1] > maxX:
+                j -= 1
 
         # only plot at max 1000 points so downsample them with the relevant stride
-        numvals = j-i
+        numvals = j - i
         stride = len(self.timeData) // 1000 + 1
         stride2 = int(numvals // 1000 + 1)
         self.maincurve.setData(self.timeData[i:j:stride2], self.powerData[i:j:stride2])
-        self.maxline.setValue(max(self.powerData[i:j]))
+        maximum = max(self.powerData[i:j])
+        self.maxline.setValue(maximum)
         self.timecurve.setData(self.timeData[::stride], self.powerData[::stride])
         # automatically swap between uW and mW
         self.current_power.setText(
@@ -123,8 +124,11 @@ class PowerMeterPlot(QWidget):
             if self.powerData[-1] > 1e-3
             else f"{self.powerData[-1]*1e6:.2f} uW"
         )
+        self.max_power.setText(
+            f"/{maximum*1e3:.2f} mW" if maximum > 1e-3 else f"/{maximum*1e6:.2f} uW"
+        )
         # format with commas
-        self.numvals.setText(f"# readings: {numvals:,}")
+        self.numvals.setText(f"# readings: {numvals:,} / {len(self.timeData):,}")
 
         self.region.setBounds([self.timeData[0], self.timeData[-1]])
         self.region.setRegion([minX, maxX])
@@ -295,6 +299,13 @@ class PowerMeterPlot(QWidget):
         self.current_power.setFont(font)
         self.reset = QPushButton("Reset")
 
+        self.max_power = QLabel("W")
+        font2 = QFontDatabase.systemFont(QFontDatabase.SystemFont.FixedFont)
+        font2.setPointSize(20)
+        font2.setBold(True)
+        self.max_power.setFont(font2)
+        self.max_power.setStyleSheet("color: gray;")
+
         def reset():
             self.timeData = []
             self.powerData = []
@@ -314,7 +325,8 @@ class PowerMeterPlot(QWidget):
         main.addWidget(self.samplerate, 1, 1)
         main.addWidget(QLabel("Averaging:"), 2, 0)
         main.addWidget(self.average, 2, 1)
-        main.addWidget(self.current_power, 0, 2, 4, 1, Qt.AlignmentFlag.AlignCenter)
+        main.addWidget(self.current_power, 0, 2, 3, 1, Qt.AlignmentFlag.AlignCenter)
+        main.addWidget(self.max_power, 3, 2, 1, 1, Qt.AlignmentFlag.AlignRight)
         main.addWidget(self.startstop, 3, 0)
         main.addWidget(self.reset, 3, 1)
 
